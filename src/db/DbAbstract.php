@@ -32,4 +32,13 @@ abstract class DbAbstract implements DbInterface
   {
     $this->dbh = null;
   }
+
+  protected function set_db()
+  {
+    $this->host = getenv('DB_HOST');
+    $this->port = getenv('DB_PORT');
+    $this->dbname = getenv('DB_DBNAME');
+    $this->user = getenv('DB_USER');
+    $this->password = getenv('DB_PASSWORD');
+  }
 }
