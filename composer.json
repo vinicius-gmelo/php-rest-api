@@ -1,5 +1,5 @@
 {
-  "name": "vmelo-gon/rest-api",
+  "name": "vinicius-gmelo/rest-api",
   "type": "project",
   "autoload": {
     "psr-4": {
