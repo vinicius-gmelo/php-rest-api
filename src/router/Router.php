@@ -45,18 +45,28 @@ class Router implements RouterInterface
     }
   }
 
-  public function create_route(string $method, string $path, string $handler): array
+  public function create_route(string $method, string $path, string $handler): bool
   {
-    $route = new Route($method, $path, $handler);
-    array_push($this->routes, $route);
-    return $this->get_routes();
+    try {
+      $route = new Route($method, $path, $handler);
+      array_push($this->routes, $route);
+      return true;
+    } catch (\Exception $e) {
+      print $e->getMessage();
+      return false;
+    }
   }
 
-  public function delete_route(string $method, string $path): array
+  public function delete_route(string $method, string $path): bool
   {
-    $i = $this->search_route(new Route($method, $path));
-    array_splice($this->routes, $i, 1);
-    return $this->get_routes();
+    try {
+      $i = $this->search_route(new Route($method, $path));
+      array_splice($this->routes, $i, 1);
+      return true;
+    } catch (\Exception $e) {
+      print $e->getMessage();
+      return false;
+    }
   }
 
   public function update_route(string $method, string $path, string $handler): bool
@@ -66,21 +76,20 @@ class Router implements RouterInterface
     if ($i === -1) {
       return false;
     } else {
-      $route = $this->routes[$i];
-      $route->set_handler($handler);
-      return true;
+      try {
+        $route = $this->routes[$i];
+        $route->set_handler($handler);
+        return true;
+      } catch (\Exception $e) {
+        print $e->getMessage();
+        return false;
+      }
     }
   }
 
   public function get_routes(): array
   {
-    $routes = array();
-
-    foreach ($this->routes as $route) {
-      array_push(Route::to_arr($route));
-    }
-
-    return $routes;
+    return $this->routes;
   }
 
   public function resolve(array $request): string

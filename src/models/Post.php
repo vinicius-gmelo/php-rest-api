@@ -2,19 +2,22 @@
 
 namespace app\models;
 
-use app\models\AbstractModel;
+use app\models\Model;
 
-class Post extends AbstractModel
+class Post extends Model
 {
 
   const TABLE = 'posts';
 
-  private string $content;
-  private string $author;
+  public string $content;
+  public string $author;
 
-  public function __construct(array $post)
+  public function __construct($content, $author, $id = null, $created_at = null)
   {
 
-    $this->set_model($post);
+    $this->id = htmlspecialchars(strip_tags($id));
+    $this->created_at = htmlspecialchars(strip_tags($created_at));
+    $this->content = htmlspecialchars(strip_tags($content));
+    $this->author = htmlspecialchars(strip_tags($author));
   }
 }

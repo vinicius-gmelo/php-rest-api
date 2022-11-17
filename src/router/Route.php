@@ -9,15 +9,6 @@ class Route
   private string $method;
   private string $handler;
 
-  public static function to_arr(Route $route)
-  {
-    return array(
-      'method' => $route->get_method(),
-      'path' => $route->get_path(),
-      'handler' => $route->get_handler()
-    );
-  }
-
   public function __construct($method, $path, $handler = '')
   {
 

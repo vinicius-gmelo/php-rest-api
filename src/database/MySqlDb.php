@@ -1,10 +1,10 @@
 <?php
 
-namespace app\db;
+namespace app\database;
 
-use app\db\DbAbstract;
+use app\database\Database;
 
-class MySqlDb extends DbAbstract
+class MySqlDb extends Database
 {
   const DB = 'mysql';
 
