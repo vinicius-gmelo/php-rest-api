@@ -11,5 +11,8 @@
       "name": "Vinicius Melo"
     }
   ],
-  "require": {}
+  "require": {},
+  "scripts": {
+    "start": ". ./src/config/env.sh; cd ./public; php -S localhost:8080"
+  }
 }

@@ -1,7 +1,0 @@
-set -a
-
-DB_HOST=
-DB_PORT=
-DB_DBNAME=
-DB_USER=
-DB_PASSWORD=

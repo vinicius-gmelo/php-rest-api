@@ -34,6 +34,7 @@ class App
 
   public function init($request)
   {
+
     $this->set_router();
     $dbh = $this->db->connect();
 
