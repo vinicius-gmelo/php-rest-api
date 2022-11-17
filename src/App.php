@@ -3,13 +3,13 @@
 namespace app;
 
 use app\router\Router;
-use app\models\User;
+use app\database\Database;
 use app\database\MySqlDb;
 
 class App
 {
 
-  private MySqlDb $db;
+  private Database $db;
   private Router $router;
   private $routes = array(
     array('method' => 'post', 'path' => '/api/', 'handler' => 'create'),
