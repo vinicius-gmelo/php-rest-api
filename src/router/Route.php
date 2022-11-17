@@ -5,16 +5,16 @@ namespace app\router;
 class Route
 {
 
-  private string $path;
   private string $method;
-  private string $handler;
+  private string $path;
+  private ?string $handler;
 
-  public function __construct($method, $path, $handler = '')
+  public function __construct(array $route)
   {
 
-    $this->method = strtoupper($method);
-    $this->path = $path;
-    $this->handler = $handler;
+    $this->method = strtoupper($route['method']);
+    $this->path = $route['path'];
+    $this->handler = $route['handler'] ?? null;
   }
 
   public function get_path()

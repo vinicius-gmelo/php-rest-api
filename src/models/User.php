@@ -3,6 +3,7 @@
 namespace app\models;
 
 use app\models\Model;
+use app\helpers\Sanitizer;
 
 class User extends Model
 {
@@ -15,10 +16,10 @@ class User extends Model
 
   public function __construct($name, $username, $email, $id = null, $created_at = null)
   {
-    $this->name = htmlspecialchars(strip_tags($name));
-    $this->username = htmlspecialchars(strip_tags($username));
-    $this->email = htmlspecialchars(strip_tags($email));
-    $this->id = htmlspecialchars(strip_tags($id));
-    $this->created_at = htmlspecialchars(strip_tags($created_at));
+    $this->name = Sanitizer::sanitize_string($name);
+    $this->username = Sanitizer::sanitize_string($username);
+    $this->email = Sanitizer::sanitize_string($email);
+    $this->id = Sanitizer::string_to_int($id);
+    $this->created_at = Sanitizer::sanitize_string($created_at);
   }
 }

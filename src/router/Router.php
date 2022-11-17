@@ -34,7 +34,7 @@ class Router implements RouterInterface
   public function route_exists(string $method, string $path): bool
   {
 
-    $route = new Route($method, $path);
+    $route = new Route(array('method' => $method, 'path' => $path));
 
     $i = $this->search_route($route);
 
@@ -48,7 +48,7 @@ class Router implements RouterInterface
   public function create_route(string $method, string $path, string $handler): bool
   {
     try {
-      $route = new Route($method, $path, $handler);
+      $route = new Route(array('method' => $method, 'path' => $path, 'handler' => $handler));
       array_push($this->routes, $route);
       return true;
     } catch (\Exception $e) {
@@ -59,7 +59,7 @@ class Router implements RouterInterface
   public function delete_route(string $method, string $path): bool
   {
     try {
-      $i = $this->search_route(new Route($method, $path));
+      $i = $this->search_route(new Route(array('method' => $method, 'path' => $path)));
       array_splice($this->routes, $i, 1);
       return true;
     } catch (\Exception $e) {
@@ -70,7 +70,7 @@ class Router implements RouterInterface
   public function update_route(string $method, string $path, string $handler): bool
   {
 
-    $i = $this->search_route(new Route($method, $path));
+    $i = $this->search_route(new Route(array('method' => $method, 'path' => $path, 'handler' => $handler)));
     if ($i === -1) {
       return false;
     } else {
@@ -85,16 +85,22 @@ class Router implements RouterInterface
     }
   }
 
-  public function resolve(array $request): string
+  public function resolve(array $request): void
   {
 
     $method = $request['REQUEST_METHOD'];
-    $path = $request['REQUEST_URI'];
+    $path = $request['PATH_INFO'] ?? '/';
 
     if ($this->route_exists($method, $path)) {
-      return json_encode(array('message' => 'success', 'code' => 200));
+      $route = $this->routes[$this->search_route(new Route(array('method' => $method, 'path' => $path)))];
+      var_dump($route);
     } else {
-      return json_encode(array('message' => 'not found', 'code' => 404));
+      $this->not_found();
     }
+  }
+
+  private function not_found(): void
+  {
+    http_response_code(404);
   }
 }

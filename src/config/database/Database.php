@@ -1,8 +1,8 @@
 <?php
 
-namespace app\database;
+namespace app\config\database;
 
-use app\database\DbInterface;
+use app\config\database\DbInterface;
 
 abstract class Database implements DbInterface
 {

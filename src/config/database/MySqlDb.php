@@ -1,8 +1,8 @@
 <?php
 
-namespace app\database;
+namespace app\config\database;
 
-use app\database\Database;
+use app\config\database\Database;
 
 class MySqlDb extends Database
 {

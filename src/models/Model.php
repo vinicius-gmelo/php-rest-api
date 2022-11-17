@@ -8,7 +8,7 @@ abstract class Model implements ModelInterface
 {
 
   const TABLE = '';
-  protected ?string $id;
+  protected ?int $id;
   protected ?string $created_at;
 
   public static function create(\PDO $dbh, self $entity): bool
