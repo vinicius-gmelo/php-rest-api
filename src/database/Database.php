@@ -17,21 +17,16 @@ abstract class Database implements DbInterface
 
   public \PDO $dbh;
 
-  public function connect(): \PDO
+  public function connect(): ?\PDO
   {
     try {
       $this->dbh = new \PDO(static::DB . ":host={$this->host};port={$this->port};dbname={$this->dbname}", $this->user, $this->password);
       $this->dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
     } catch (\PDOException $e) {
-      echo 'Connection Error: ' . $e->getMessage();
+      return null;
     }
 
     return $this->dbh;
-  }
-
-  public function disconnect(): void
-  {
-    $this->dbh = null;
   }
 
   protected function set_db()

@@ -52,7 +52,6 @@ class Router implements RouterInterface
       array_push($this->routes, $route);
       return true;
     } catch (\Exception $e) {
-      print $e->getMessage();
       return false;
     }
   }
@@ -64,7 +63,6 @@ class Router implements RouterInterface
       array_splice($this->routes, $i, 1);
       return true;
     } catch (\Exception $e) {
-      print $e->getMessage();
       return false;
     }
   }
@@ -85,11 +83,6 @@ class Router implements RouterInterface
         return false;
       }
     }
-  }
-
-  public function get_routes(): array
-  {
-    return $this->routes;
   }
 
   public function resolve(array $request): string

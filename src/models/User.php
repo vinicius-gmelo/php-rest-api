@@ -15,10 +15,10 @@ class User extends Model
 
   public function __construct($name, $username, $email, $id = null, $created_at = null)
   {
-    $this->id = htmlspecialchars(strip_tags($id));
-    $this->created_at = htmlspecialchars(strip_tags($created_at));
     $this->name = htmlspecialchars(strip_tags($name));
     $this->username = htmlspecialchars(strip_tags($username));
     $this->email = htmlspecialchars(strip_tags($email));
+    $this->id = htmlspecialchars(strip_tags($id));
+    $this->created_at = htmlspecialchars(strip_tags($created_at));
   }
 }

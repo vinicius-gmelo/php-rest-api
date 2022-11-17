@@ -36,7 +36,6 @@ abstract class Model implements ModelInterface
       $stmt->execute($data);
       return true;
     } catch (\Exception $e) {
-      print $e->getMessage();
       return false;
     }
   }
@@ -59,8 +58,6 @@ abstract class Model implements ModelInterface
   public static function retrieve_single(\PDO $dbh, int $id): ?self
   {
 
-    $id = htmlspecialchars(strip_tags($id));
-
     $query = 'SELECT * FROM ' . static::TABLE . ' WHERE id=:id';
 
     try {
@@ -77,17 +74,13 @@ abstract class Model implements ModelInterface
   public static function delete(\PDO $dbh, int $id): bool
   {
 
-    $id = htmlspecialchars(strip_tags($id));
-
     $query = 'DELETE FROM ' . static::TABLE . ' WHERE id = :id';
-
 
     try {
       $stmt = $dbh->prepare($query);
       $stmt->execute(array('id' => $id));
       return true;
     } catch (\PDOException $e) {
-      print $e->getMessage();
       return false;
     }
   }
@@ -113,15 +106,12 @@ abstract class Model implements ModelInterface
 
     $query .= ' WHERE id = :id';
 
-
-
     try {
       $stmt = $dbh->prepare($query);
       $data['id'] = $entity->id;
       $stmt->execute($data);
       return true;
     } catch (\PDOException $e) {
-      print $e->getMessage();
       return false;
     }
   }
