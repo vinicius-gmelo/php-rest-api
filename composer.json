@@ -13,10 +13,5 @@
   ],
   "scripts": {
     "start": ". ./src/config/env.sh; cd ./public; php -S localhost:8080"
-  },
-  "config": {
-    "allow-plugins": {
-      "symfony/flex": true
-    }
   }
 }
