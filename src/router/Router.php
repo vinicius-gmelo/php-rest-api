@@ -91,9 +91,19 @@ class Router implements RouterInterface
     $method = $request['REQUEST_METHOD'];
     $path = $request['PATH_INFO'] ?? '/';
 
+    parse_str($request['QUERY_STRING'], $params);
+
     if ($this->route_exists($method, $path)) {
       $route = $this->routes[$this->search_route(new Route(array('method' => $method, 'path' => $path)))];
-      $route->get_handler && $route->get_handler($request);
+      # [TODO] Criar classe Apirouter para resolver a execução da handler
+      $handler = $route->get_handler();
+      if (isset($handler)) {
+        if (func_num_args($handler) === 0) {
+          $handler();
+        } else {
+          $handler($params['id'] ?? null);
+        }
+      }
     } else {
       $this->not_found();
     }

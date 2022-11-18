@@ -8,14 +8,13 @@ use app\lib\Api;
 class App
 {
 
+  const DB = 'mysql';
   private Router $router;
-  private Api $api;
 
   public function __construct()
   {
     $this->router = new Router();
-    $this->api = new Api();
-    $this->set_routes();
+    $this->set_router();
   }
 
   public function init($request)
@@ -24,15 +23,17 @@ class App
     $dbh = null;
   }
 
-  private function set_routes()
+  private function set_router()
   {
 
     $methods = ['post', 'get', 'put', 'delete'];
-    $paths = ['/api/users', '/api/posts'];
+    $models = ['user', 'post'];
 
-    foreach ($paths as $path) {
+    foreach ($models as $model) {
+      $path = '/api/' . $model . 's/';
+      $api = new Api($model, self::DB);
       foreach ($methods as $method) {
-        $this->router->create_route($method, $path, $this->api->$method);
+        $this->router->create_route($method, $path, $api->$method);
       }
     }
   }
