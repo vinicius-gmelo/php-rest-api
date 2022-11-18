@@ -2,8 +2,6 @@
 
 namespace app\lib;
 
-use app\models\Model;
-
 interface RestApiInterface
 {
 
