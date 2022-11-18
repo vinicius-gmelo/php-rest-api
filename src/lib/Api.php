@@ -4,22 +4,22 @@ namespace app\lib;
 
 use app\config\database\Database;
 use app\lib\RestApiInterface;
+use app\models\Model;
 
 class Api implements RestApiInterface
 {
   private Database $db;
-  private string $model;
+  private Model $model;
 
-  public function __construct(string $model, string $db)
+  public function __construct($model, $db)
   {
-    $db = 'app\config\database\\' . ucfirst(strtolower($db));
-    $this->db = new $db();
-    $this->model = 'app\models\\' . ucfirst(strtolower($model));
+    $this->model = $model;
+    $this->db = $db;
   }
 
   public function post(): void
   {
-    $dbh = $this->db_connect();
+    $dbh = $this->db->connect();
 
     header('Access-Control-Allow-Origin: *');
     header('Content-Type: application/json');
@@ -27,8 +27,8 @@ class Api implements RestApiInterface
     header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Content-Type,Access-Control-Allow-Methods, Authorization, X-Requested-With');
 
     $post_data = json_decode(file_get_contents('php://input'), true);
-    $entity = new $this->model($post_data);
-    if ($entity::create($dbh, $entity)) {
+    $model = get_class($this->model);
+    if ((new $model($dbh, $post_data))->create()) {
       http_response_code(200);
     } else {
       http_response_code(400);
@@ -37,20 +37,21 @@ class Api implements RestApiInterface
     $dbh = null;
   }
 
-  public function get(int $id): void
+  public function get(): void
   {
-    $dbh = $this->db_connect();
-
     header('Access-Control-Allow-Origin: *');
     header('Content-Type: application/json');
 
+    $dbh = $this->db->connect();
+    $model = get_class($this->model);
+    parse_str($_SERVER['QUERY_STRING'], $params);
+    $id = $params['id'] ?? null;
+
     if ($id) {
-      $entity = $this->model::retrieve_single($dbh, $id);
-      $json = json_encode($entity);
+      $json = json_encode((new $model($dbh, ['id' => $id]))->retrieve_single());
       print $json;
     } else {
-      $arr = $this->model::retrieve($dbh);
-      $json = json_encode($arr);
+      $json = json_encode((new $model($dbh))->retrieve());
       print $json;
     }
 
@@ -59,16 +60,16 @@ class Api implements RestApiInterface
 
   public function put(): void
   {
-    $dbh = $this->db_connect();
-
     header('Access-Control-Allow-Origin: *');
     header('Content-Type: application/json');
     header('Access-Control-Allow-Methods: PUT');
     header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Content-Type,Access-Control-Allow-Methods, Authorization, X-Requested-With');
 
+    $dbh = $this->db->connect();
     $put_data = json_decode(file_get_contents('php://input'), true);
-    $entity = new $this->model($put_data);
-    if ($entity::update($dbh, $entity)) {
+    $model = get_class($this->model);
+
+    if ((new $model($dbh, $put_data))->update()) {
       http_response_code(200);
     } else {
       http_response_code(400);
@@ -77,27 +78,24 @@ class Api implements RestApiInterface
     $dbh = null;
   }
 
-  public function delete(int $id): void
+  public function delete(): void
   {
-
-    $dbh = $this->db_connect();
-
     header('Access-Control-Allow-Origin: *');
     header('Content-Type: application/json');
     header('Access-Control-Allow-Methods: DELETE');
     header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Content-Type,Access-Control-Allow-Methods, Authorization, X-Requested-With');
 
-    if ($this->model::delete($dbh, $id)) {
+    $dbh = $this->db->connect();
+    parse_str($_SERVER['QUERY_STRING'], $params);
+    $id = $params['id'] ?? null;
+    $model = get_class($this->model);
+
+    if ((new $model($dbh, ['id' => $id]))->delete()) {
       http_response_code(200);
     } else {
       http_response_code(400);
     }
 
     $dbh = null;
-  }
-
-  private function db_connect()
-  {
-    return $this->db->connect();
   }
 }

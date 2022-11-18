@@ -10,14 +10,33 @@ class Post extends Model
 
   const TABLE = 'posts';
 
-  public string $content;
-  public string $author;
+  private ?string $content;
+  private ?string $author;
 
-  public function __construct(array $post)
+  public function __construct(\PDO $dbh = null, array $post = null)
   {
-    $this->content = Sanitizer::sanitize_string($post['content']);
-    $this->author = Sanitizer::sanitize_string($post['author']);
-    $this->id = Sanitizer::string_to_int($post['id']);
-    $this->created_at = Sanitizer::sanitize_string($post['created_at']);
+    $this->content = Sanitizer::sanitize_string($post['content'] ?? null);
+    $this->author = Sanitizer::sanitize_string($post['author'] ?? null);
+    parent::__construct($dbh, $post);
+  }
+
+  public function get_content()
+  {
+    return $this->content;
+  }
+
+  public function set_content(string $content)
+  {
+    $this->content = Sanitizer::sanitize_string($content);
+  }
+
+  public function get_author()
+  {
+    return $this->author;
+  }
+
+  public function set_author(string $author)
+  {
+    $this->author = Sanitizer::sanitize_string($author);
   }
 }

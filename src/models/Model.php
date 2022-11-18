@@ -3,6 +3,7 @@
 namespace app\models;
 
 use app\models\ModelInterface;
+use app\helpers\Sanitizer;
 
 abstract class Model implements ModelInterface
 {
@@ -10,12 +11,21 @@ abstract class Model implements ModelInterface
   const TABLE = '';
   protected ?int $id;
   protected ?string $created_at;
+  protected ?\PDO $dbh;
 
-  public static function create(\PDO $dbh, self $entity): bool
+  public function __construct(?\PDO $dbh, ?array $data): void
+  {
+    $this->id = Sanitizer::string_to_int($data['id'] ?? null);
+    $this->created_at = Sanitizer::sanitize_string($data['created_at'] ?? null);
+
+    $this->dbh = $dbh ?? null;
+  }
+
+  public function create(): bool
   {
     $query = 'INSERT INTO ' . static::TABLE . ' SET ';
 
-    $data = $entity->get_vars();
+    $data = get_object_vars($this);
 
     unset($data['id']);
     unset($data['created_at']);
@@ -30,7 +40,7 @@ abstract class Model implements ModelInterface
       }
     }
 
-    $stmt = $dbh->prepare($query);
+    $stmt = $this->dbh->prepare($query);
 
     try {
       $stmt->execute($data);
@@ -39,55 +49,55 @@ abstract class Model implements ModelInterface
       return false;
     }
   }
-  public static function retrieve(\PDO $dbh): ?array
+  public function retrieve(): ?array
   {
 
     try {
-      $rows = $dbh->query('SELECT * FROM ' . static::TABLE)->fetchAll(\PDO::FETCH_ASSOC);
-      $entities = array();
+      $rows = $this->dbh->query('SELECT * FROM ' . static::TABLE)->fetchAll(\PDO::FETCH_ASSOC);
+      $data = array();
 
       foreach ($rows as $row) {
-        array_push($entities, new static(...array_values($row)));
+        array_push($data, new static(...array_values($row)));
       }
     } catch (\PDOException | \TypeError $e) {
       return null;
     }
 
-    return $entities;
+    return $data;
   }
-  public static function retrieve_single(\PDO $dbh, int $id): ?self
+  public function retrieve_single(): ?static
   {
 
     $query = 'SELECT * FROM ' . static::TABLE . ' WHERE id=:id';
 
     try {
-      $stmt = $dbh->prepare($query);
-      $stmt->execute(array('id' => $id));
+      $stmt = $this->dbh->prepare($query);
+      $stmt->execute(array('id' => $this->id));
       $row = $stmt->fetch(\PDO::FETCH_ASSOC);
-      $entity = new static(...array_values($row));
+      $data = new static(...array_values($row));
     } catch (\PDOException | \TypeError $e) {
       return null;
     }
 
-    return $entity;
+    return $data;
   }
-  public static function delete(\PDO $dbh, int $id): bool
+  public function delete(): bool
   {
 
     $query = 'DELETE FROM ' . static::TABLE . ' WHERE id = :id';
 
     try {
-      $stmt = $dbh->prepare($query);
-      $stmt->execute(array('id' => $id));
+      $stmt = $this->dbh->prepare($query);
+      $stmt->execute(array('id' => $this->id));
       return true;
     } catch (\PDOException $e) {
       return false;
     }
   }
-  public static function update(\PDO $dbh, self $entity): bool
+  public function update(): bool
   {
 
-    $data = $entity->get_vars();
+    $data = get_object_vars($this);
 
     unset($data['id']);
     unset($data['created_at']);
@@ -107,17 +117,12 @@ abstract class Model implements ModelInterface
     $query .= ' WHERE id = :id';
 
     try {
-      $stmt = $dbh->prepare($query);
-      $data['id'] = $entity->id;
+      $stmt = $this->dbh->prepare($query);
+      $data['id'] = $this->id;
       $stmt->execute($data);
       return true;
     } catch (\PDOException $e) {
       return false;
     }
-  }
-
-  private function get_vars(): array
-  {
-    return get_object_vars($this);
   }
 }
