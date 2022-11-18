@@ -79,7 +79,6 @@ class Router implements RouterInterface
         $route->set_handler($handler);
         return true;
       } catch (\Exception $e) {
-        print $e->getMessage();
         return false;
       }
     }
@@ -105,12 +104,7 @@ class Router implements RouterInterface
         }
       }
     } else {
-      $this->not_found();
+      http_response_code(404);
     }
-  }
-
-  private function not_found(): void
-  {
-    http_response_code(404);
   }
 }

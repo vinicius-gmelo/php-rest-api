@@ -2,7 +2,7 @@
 
 namespace app\config\database;
 
-interface DbInterface
+interface DatabaseInterface
 {
 
   public function connect(): ?\PDO;

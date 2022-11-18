@@ -6,7 +6,7 @@ use app\config\database\Database;
 use app\lib\RestApiInterface;
 use app\models\Model;
 
-class Api implements RestApiInterface
+class RestApi implements RestApiInterface
 {
   private Database $db;
   private Model $model;

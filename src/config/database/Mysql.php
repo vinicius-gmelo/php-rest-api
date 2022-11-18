@@ -4,9 +4,9 @@ namespace app\config\database;
 
 use app\config\database\Database;
 
-class MySqlDb extends Database
+class Mysql extends Database
 {
-  const DB = 'mysql';
+  const DATABASE = 'Mysql';
 
   public function __construct()
   {

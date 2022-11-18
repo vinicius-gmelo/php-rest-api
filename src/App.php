@@ -3,12 +3,16 @@
 namespace app;
 
 use app\router\Router;
-use app\lib\Api;
+use app\lib\RestApi;
+use app\models\Post;
+use app\models\User;
+use app\config\database\Mysql;
 
 class App
 {
 
-  const DB = 'mysql';
+  const DB = 'Mysql';
+  const MODELS = array('User', 'Post');
   private Router $router;
 
   public function __construct()
@@ -20,18 +24,17 @@ class App
   public function init($request)
   {
     $this->router->resolve($request);
-    $dbh = null;
   }
 
   private function set_router()
   {
 
-    $methods = ['post', 'get', 'put', 'delete'];
-    $models = ['user', 'post'];
+    $methods = array('post', 'get', 'put', 'delete');
 
-    foreach ($models as $model) {
-      $path = '/api/' . $model . 's/';
-      $api = new Api($model, self::DB);
+    foreach (self::MODELS as $model) {
+      $path = '/api/' . strtolower($model) . 's/';
+      $db = self::DB;
+      $api = new RestApi(new $model(), new $db());
       foreach ($methods as $method) {
         $this->router->create_route($method, $path, $api->$method);
       }

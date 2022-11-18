@@ -2,12 +2,12 @@
 
 namespace app\config\database;
 
-use app\config\database\DbInterface;
+use app\config\database\DatabaseInterface;
 
-abstract class Database implements DbInterface
+abstract class Database implements DatabaseInterface
 {
 
-  const DB = '';
+  const DATABASE = '';
 
   protected string $host;
   protected string $port;
@@ -20,7 +20,7 @@ abstract class Database implements DbInterface
   public function connect(): ?\PDO
   {
     try {
-      $this->dbh = new \PDO(static::DB . ":host={$this->host};port={$this->port};dbname={$this->dbname}", $this->user, $this->password);
+      $this->dbh = new \PDO(strtolower(static::DATABASE) . ":host={$this->host};port={$this->port};dbname={$this->dbname}", $this->user, $this->password);
       $this->dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
     } catch (\PDOException $e) {
       return null;
