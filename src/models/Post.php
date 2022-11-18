@@ -10,14 +10,16 @@ class Post extends Model
 
   const TABLE = 'posts';
 
-  public string $content;
-  public string $author;
+  public ?string $content;
+  public ?string $author;
 
-  public function __construct($content, $author, $id = null, $created_at = null)
+  public function __construct(?array $post)
   {
-    $this->content = Sanitizer::sanitize_string($content);
-    $this->author = Sanitizer::sanitize_string($author);
-    $this->id = Sanitizer::string_to_int($id);
-    $this->created_at = Sanitizer::sanitize_string($created_at);
+    if (isset($post)) {
+      $this->content = Sanitizer::sanitize_string($post['content']);
+      $this->author = Sanitizer::sanitize_string($post['author']);
+      $this->id = Sanitizer::string_to_int($post['id']);
+      $this->created_at = Sanitizer::sanitize_string($post['created_at']);
+    }
   }
 }

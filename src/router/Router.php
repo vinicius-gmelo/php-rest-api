@@ -45,7 +45,7 @@ class Router implements RouterInterface
     }
   }
 
-  public function create_route(string $method, string $path, string $handler): bool
+  public function create_route(string $method, string $path, ?callable $handler): bool
   {
     try {
       $route = new Route(array('method' => $method, 'path' => $path, 'handler' => $handler));
@@ -67,7 +67,7 @@ class Router implements RouterInterface
     }
   }
 
-  public function update_route(string $method, string $path, string $handler): bool
+  public function update_route(string $method, string $path, ?callable $handler): bool
   {
 
     $i = $this->search_route(new Route(array('method' => $method, 'path' => $path, 'handler' => $handler)));
@@ -93,7 +93,7 @@ class Router implements RouterInterface
 
     if ($this->route_exists($method, $path)) {
       $route = $this->routes[$this->search_route(new Route(array('method' => $method, 'path' => $path)))];
-      var_dump($route);
+      $route->get_handler && $route->get_handler($request);
     } else {
       $this->not_found();
     }

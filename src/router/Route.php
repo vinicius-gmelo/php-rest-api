@@ -7,7 +7,7 @@ class Route
 
   private string $method;
   private string $path;
-  private ?string $handler;
+  private ?callable $handler;
 
   public function __construct(array $route)
   {

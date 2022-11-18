@@ -3,43 +3,37 @@
 namespace app;
 
 use app\router\Router;
-use app\config\database\Database;
-use app\config\database\MySqlDb;
+use app\lib\Api;
 
 class App
 {
 
-  private Database $db;
   private Router $router;
-  private $routes = array(
-    array('method' => 'post', 'path' => '/api/', 'handler' => 'post'),
-    array('method' => 'get', 'path' => '/api/', 'handler' => 'get'),
-    array('method' => 'put', 'path' => '/api/', 'handler' => 'put'),
-    array('method' => 'delete', 'path' => '/api/', 'handler' => 'delete')
-  );
+  private Api $api;
 
   public function __construct()
   {
-
-    $this->db = new MySqlDb();
     $this->router = new Router();
-  }
-
-  private function set_router()
-  {
-    foreach ($this->routes as $route) {
-      $this->router->create_route($route['method'], $route['path'], $route['handler']);
-    }
+    $this->api = new Api();
+    $this->set_routes();
   }
 
   public function init($request)
   {
-
-    $this->set_router();
-    $dbh = $this->db->connect();
-
-    print $this->router->resolve($request);
-
+    $this->router->resolve($request);
     $dbh = null;
+  }
+
+  private function set_routes()
+  {
+
+    $methods = ['post', 'get', 'put', 'delete'];
+    $paths = ['/api/users', '/api/posts'];
+
+    foreach ($paths as $path) {
+      foreach ($methods as $method) {
+        $this->router->create_route($method, $path, $this->api->$method);
+      }
+    }
   }
 }
