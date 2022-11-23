@@ -12,6 +12,6 @@
     }
   ],
   "scripts": {
-    "start": ". ./src/config/env.sh; cd ./public; php -S localhost:8080"
+    "start": "chmod +x ./src/config/env.sh; . ./src/config/env.sh; cd ./public; php -S localhost:8080"
   }
 }
