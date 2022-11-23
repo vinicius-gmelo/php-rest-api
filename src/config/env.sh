@@ -1,7 +1,11 @@
-set -a
+#!/bin/sh
 
-DB_HOST="${DB_HOST:-}"
-DB_PORT="${DB_PORT:-}"
-DB_DBNAME="${DB_DBNAME:-}"
-DB_USER="${DB_USER:-}"
-DB_PASSWORD="${DB_PASSWORD:-}"
+# Put your db setup/dsn here
+
+DB_HOST=${DB_HOST:=}
+DB_PORT=${DB_PORT:=}
+DB_DBNAME=${DB_DBNAME:=}
+DB_USER=${DB_USER:=}
+DB_PASSWORD=${DB_PASSWORD:=}
+
+export DB_HOST DB_PORT DB_DBNAME DB_USER DB_PASSWORD
