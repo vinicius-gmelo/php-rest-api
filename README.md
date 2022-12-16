@@ -1,4 +1,4 @@
-# REST API em PHP puro
+# REST API em PHP
 REST API em PHP puro, com interfaces/classes para os modelos do banco, roteador e API.
 ## Requerimentos
 Setar as variáveis de ambiente para o banco e iniciar o servidor. Exemplo:
